@@ -1,0 +1,1263 @@
+# HTML Element Specification for Vango
+# This file drives code generation for VEX Layer 0 and Layer 1
+# Based on MDN HTML5 specification
+
+version: "1.0"
+generated: "2025-01-07"
+source: "https://developer.mozilla.org/en-US/docs/Web/HTML/Element"
+
+# Global attributes that apply to all elements
+global_attributes:
+  - name: id
+    type: string
+  - name: class
+    type: string
+    alias: className  # For JSX compatibility
+  - name: style
+    type: string
+  - name: title
+    type: string
+  - name: lang
+    type: string
+  - name: dir
+    type: enum
+    values: ["ltr", "rtl", "auto"]
+  - name: hidden
+    type: bool
+  - name: tabindex
+    type: int
+  - name: contenteditable
+    type: bool
+  - name: draggable
+    type: bool
+  - name: spellcheck
+    type: bool
+  
+  # Data attributes
+  - name: data-*
+    type: map[string]string
+    
+  # ARIA attributes
+  - name: role
+    type: string
+  - name: aria-label
+    type: string
+  - name: aria-labelledby
+    type: string
+  - name: aria-describedby
+    type: string
+  - name: aria-hidden
+    type: bool
+  - name: aria-live
+    type: enum
+    values: ["polite", "assertive", "off"]
+  - name: aria-expanded
+    type: bool
+  - name: aria-controls
+    type: string
+  - name: aria-current
+    type: string
+
+# Event handlers
+event_handlers:
+  # Mouse events
+  - onclick
+  - ondblclick
+  - onmousedown
+  - onmouseup
+  - onmouseover
+  - onmousemove
+  - onmouseout
+  - onmouseenter
+  - onmouseleave
+  
+  # Keyboard events
+  - onkeydown
+  - onkeypress
+  - onkeyup
+  
+  # Form events
+  - onsubmit
+  - onreset
+  - onchange
+  - oninput
+  - onfocus
+  - onblur
+  - onselect
+  
+  # Touch events
+  - ontouchstart
+  - ontouchmove
+  - ontouchend
+  - ontouchcancel
+  
+  # Drag events
+  - ondrag
+  - ondragstart
+  - ondragend
+  - ondragover
+  - ondragenter
+  - ondragleave
+  - ondrop
+  
+  # Clipboard events
+  - oncopy
+  - oncut
+  - onpaste
+
+# HTML Elements grouped by category
+elements:
+  # Document metadata
+  metadata:
+    - tag: html
+      void: false
+      attributes:
+        - name: lang
+          type: string
+          required: true
+    
+    - tag: head
+      void: false
+    
+    - tag: title
+      void: false
+      text_only: true
+    
+    - tag: meta
+      void: true
+      attributes:
+        - name: charset
+          type: string
+        - name: name
+          type: string
+        - name: content
+          type: string
+        - name: http-equiv
+          type: string
+    
+    - tag: link
+      void: true
+      attributes:
+        - name: rel
+          type: string
+          required: true
+        - name: href
+          type: string
+          required: true
+        - name: type
+          type: string
+        - name: media
+          type: string
+    
+    - tag: style
+      void: false
+      text_only: true
+      attributes:
+        - name: type
+          type: string
+          default: "text/css"
+    
+    - tag: script
+      void: false
+      attributes:
+        - name: src
+          type: string
+        - name: type
+          type: string
+          default: "text/javascript"
+        - name: async
+          type: bool
+        - name: defer
+          type: bool
+        - name: crossorigin
+          type: string
+
+  # Content sectioning
+  sectioning:
+    - tag: body
+      void: false
+    
+    - tag: article
+      void: false
+    
+    - tag: section
+      void: false
+    
+    - tag: nav
+      void: false
+    
+    - tag: aside
+      void: false
+    
+    - tag: header
+      void: false
+    
+    - tag: footer
+      void: false
+    
+    - tag: main
+      void: false
+      unique: true  # Only one per document
+
+  # Text content
+  text_content:
+    - tag: div
+      void: false
+    
+    - tag: p
+      void: false
+    
+    - tag: h1
+      void: false
+      semantic_level: 1
+    
+    - tag: h2
+      void: false
+      semantic_level: 2
+    
+    - tag: h3
+      void: false
+      semantic_level: 3
+    
+    - tag: h4
+      void: false
+      semantic_level: 4
+    
+    - tag: h5
+      void: false
+      semantic_level: 5
+    
+    - tag: h6
+      void: false
+      semantic_level: 6
+    
+    - tag: ul
+      void: false
+      allowed_children: ["li"]
+    
+    - tag: ol
+      void: false
+      allowed_children: ["li"]
+      attributes:
+        - name: start
+          type: int
+        - name: reversed
+          type: bool
+    
+    - tag: li
+      void: false
+      parent_required: ["ul", "ol"]
+      attributes:
+        - name: value
+          type: int
+    
+    - tag: dl
+      void: false
+      allowed_children: ["dt", "dd"]
+    
+    - tag: dt
+      void: false
+      parent_required: ["dl"]
+    
+    - tag: dd
+      void: false
+      parent_required: ["dl"]
+    
+    - tag: blockquote
+      void: false
+      attributes:
+        - name: cite
+          type: string
+    
+    - tag: pre
+      void: false
+      preserve_whitespace: true
+    
+    - tag: hr
+      void: true
+
+  # Inline text semantics
+  inline_text:
+    - tag: a
+      void: false
+      attributes:
+        - name: href
+          type: string
+        - name: target
+          type: enum
+          values: ["_self", "_blank", "_parent", "_top"]
+        - name: rel
+          type: string
+        - name: download
+          type: string
+    
+    - tag: span
+      void: false
+    
+    - tag: strong
+      void: false
+      semantic: emphasis
+    
+    - tag: em
+      void: false
+      semantic: emphasis
+    
+    - tag: b
+      void: false
+    
+    - tag: i
+      void: false
+    
+    - tag: u
+      void: false
+    
+    - tag: s
+      void: false
+    
+    - tag: mark
+      void: false
+    
+    - tag: small
+      void: false
+    
+    - tag: del
+      void: false
+      attributes:
+        - name: datetime
+          type: string
+    
+    - tag: ins
+      void: false
+      attributes:
+        - name: datetime
+          type: string
+    
+    - tag: sub
+      void: false
+    
+    - tag: sup
+      void: false
+    
+    - tag: code
+      void: false
+      preserve_whitespace: true
+    
+    - tag: kbd
+      void: false
+    
+    - tag: samp
+      void: false
+    
+    - tag: var
+      void: false
+    
+    - tag: time
+      void: false
+      attributes:
+        - name: datetime
+          type: string
+    
+    - tag: br
+      void: true
+    
+    - tag: wbr
+      void: true
+
+  # Image and multimedia
+  media:
+    - tag: img
+      void: true
+      attributes:
+        - name: src
+          type: string
+          required: true
+        - name: alt
+          type: string
+          required: true  # Accessibility
+        - name: width
+          type: int
+        - name: height
+          type: int
+        - name: loading
+          type: enum
+          values: ["eager", "lazy"]
+        - name: srcset
+          type: string
+        - name: sizes
+          type: string
+    
+    - tag: picture
+      void: false
+      allowed_children: ["source", "img"]
+    
+    - tag: source
+      void: true
+      parent_required: ["picture", "audio", "video"]
+      attributes:
+        - name: src
+          type: string
+        - name: srcset
+          type: string
+        - name: media
+          type: string
+        - name: type
+          type: string
+    
+    - tag: video
+      void: false
+      attributes:
+        - name: src
+          type: string
+        - name: controls
+          type: bool
+        - name: autoplay
+          type: bool
+        - name: muted
+          type: bool
+        - name: loop
+          type: bool
+        - name: poster
+          type: string
+        - name: width
+          type: int
+        - name: height
+          type: int
+    
+    - tag: audio
+      void: false
+      attributes:
+        - name: src
+          type: string
+        - name: controls
+          type: bool
+        - name: autoplay
+          type: bool
+        - name: muted
+          type: bool
+        - name: loop
+          type: bool
+    
+    - tag: track
+      void: true
+      parent_required: ["video", "audio"]
+      attributes:
+        - name: src
+          type: string
+          required: true
+        - name: kind
+          type: enum
+          values: ["subtitles", "captions", "descriptions", "chapters", "metadata"]
+        - name: srclang
+          type: string
+        - name: label
+          type: string
+
+  # Forms
+  forms:
+    - tag: form
+      void: false
+      attributes:
+        - name: action
+          type: string
+        - name: method
+          type: enum
+          values: ["get", "post"]
+        - name: enctype
+          type: string
+        - name: novalidate
+          type: bool
+        - name: target
+          type: string
+    
+    - tag: input
+      void: true
+      attributes:
+        - name: type
+          type: enum
+          values: ["text", "password", "email", "number", "tel", "url", 
+                   "search", "date", "time", "datetime-local", "month", 
+                   "week", "color", "checkbox", "radio", "file", "submit", 
+                   "reset", "button", "hidden", "range"]
+          default: "text"
+        - name: name
+          type: string
+        - name: value
+          type: string
+        - name: placeholder
+          type: string
+        - name: required
+          type: bool
+        - name: disabled
+          type: bool
+        - name: readonly
+          type: bool
+        - name: checked
+          type: bool
+        - name: min
+          type: string
+        - name: max
+          type: string
+        - name: step
+          type: string
+        - name: pattern
+          type: string
+        - name: multiple
+          type: bool
+        - name: accept
+          type: string
+    
+    - tag: textarea
+      void: false
+      attributes:
+        - name: name
+          type: string
+        - name: rows
+          type: int
+        - name: cols
+          type: int
+        - name: placeholder
+          type: string
+        - name: required
+          type: bool
+        - name: disabled
+          type: bool
+        - name: readonly
+          type: bool
+        - name: maxlength
+          type: int
+    
+    - tag: select
+      void: false
+      allowed_children: ["option", "optgroup"]
+      attributes:
+        - name: name
+          type: string
+        - name: multiple
+          type: bool
+        - name: size
+          type: int
+        - name: required
+          type: bool
+        - name: disabled
+          type: bool
+    
+    - tag: option
+      void: false
+      parent_required: ["select", "optgroup", "datalist"]
+      attributes:
+        - name: value
+          type: string
+        - name: selected
+          type: bool
+        - name: disabled
+          type: bool
+    
+    - tag: optgroup
+      void: false
+      parent_required: ["select"]
+      allowed_children: ["option"]
+      attributes:
+        - name: label
+          type: string
+          required: true
+        - name: disabled
+          type: bool
+    
+    - tag: button
+      void: false
+      attributes:
+        - name: type
+          type: enum
+          values: ["button", "submit", "reset"]
+          default: "button"
+        - name: disabled
+          type: bool
+        - name: form
+          type: string
+    
+    - tag: label
+      void: false
+      attributes:
+        - name: for
+          type: string
+    
+    - tag: fieldset
+      void: false
+      attributes:
+        - name: disabled
+          type: bool
+    
+    - tag: legend
+      void: false
+      parent_required: ["fieldset"]
+    
+    - tag: datalist
+      void: false
+      allowed_children: ["option"]
+    
+    - tag: output
+      void: false
+      attributes:
+        - name: for
+          type: string
+        - name: form
+          type: string
+
+  # Interactive elements
+  interactive:
+    - tag: details
+      void: false
+      attributes:
+        - name: open
+          type: bool
+    
+    - tag: summary
+      void: false
+      parent_required: ["details"]
+    
+    - tag: dialog
+      void: false
+      attributes:
+        - name: open
+          type: bool
+
+  # Tables
+  tables:
+    - tag: table
+      void: false
+      allowed_children: ["caption", "thead", "tbody", "tfoot", "tr"]
+    
+    - tag: caption
+      void: false
+      parent_required: ["table"]
+    
+    - tag: thead
+      void: false
+      parent_required: ["table"]
+      allowed_children: ["tr"]
+    
+    - tag: tbody
+      void: false
+      parent_required: ["table"]
+      allowed_children: ["tr"]
+    
+    - tag: tfoot
+      void: false
+      parent_required: ["table"]
+      allowed_children: ["tr"]
+    
+    - tag: tr
+      void: false
+      parent_required: ["table", "thead", "tbody", "tfoot"]
+      allowed_children: ["td", "th"]
+    
+    - tag: td
+      void: false
+      parent_required: ["tr"]
+      attributes:
+        - name: colspan
+          type: int
+        - name: rowspan
+          type: int
+    
+    - tag: th
+      void: false
+      parent_required: ["tr"]
+      attributes:
+        - name: colspan
+          type: int
+        - name: rowspan
+          type: int
+        - name: scope
+          type: enum
+          values: ["row", "col", "rowgroup", "colgroup"]
+
+  # Embedded content
+  embedded:
+    - tag: iframe
+      void: false
+      attributes:
+        - name: src
+          type: string
+        - name: width
+          type: int
+        - name: height
+          type: int
+        - name: sandbox
+          type: string
+        - name: allow
+          type: string
+    
+    - tag: embed
+      void: true
+      attributes:
+        - name: src
+          type: string
+        - name: type
+          type: string
+        - name: width
+          type: int
+        - name: height
+          type: int
+    
+    - tag: object
+      void: false
+      attributes:
+        - name: data
+          type: string
+        - name: type
+          type: string
+        - name: width
+          type: int
+        - name: height
+          type: int
+
+  # SVG and Canvas
+  graphics:
+    - tag: canvas
+      void: false
+      attributes:
+        - name: width
+          type: int
+        - name: height
+          type: int
+    
+    - tag: svg
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: viewBox
+          type: string
+        - name: width
+          type: string
+        - name: height
+          type: string
+        - name: xmlns
+          type: string
+          default: "http://www.w3.org/2000/svg"
+        - name: fill
+          type: string
+        - name: stroke
+          type: string
+        - name: stroke-width
+          type: string
+        - name: preserveAspectRatio
+          type: string
+
+  # SVG Elements
+  svg_elements:
+    # Basic shapes
+    - tag: path
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: d
+          type: string
+          required: true
+        - name: fill
+          type: string
+        - name: stroke
+          type: string
+        - name: stroke-width
+          type: string
+        - name: stroke-linecap
+          type: string
+        - name: stroke-linejoin
+          type: string
+        - name: stroke-dasharray
+          type: string
+        - name: opacity
+          type: string
+        - name: transform
+          type: string
+    
+    - tag: circle
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: cx
+          type: string
+        - name: cy
+          type: string
+        - name: r
+          type: string
+          required: true
+        - name: fill
+          type: string
+        - name: stroke
+          type: string
+        - name: stroke-width
+          type: string
+        - name: opacity
+          type: string
+        - name: transform
+          type: string
+    
+    - tag: rect
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: x
+          type: string
+        - name: y
+          type: string
+        - name: width
+          type: string
+          required: true
+        - name: height
+          type: string
+          required: true
+        - name: rx
+          type: string
+        - name: ry
+          type: string
+        - name: fill
+          type: string
+        - name: stroke
+          type: string
+        - name: stroke-width
+          type: string
+        - name: opacity
+          type: string
+        - name: transform
+          type: string
+    
+    - tag: line
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: x1
+          type: string
+          required: true
+        - name: y1
+          type: string
+          required: true
+        - name: x2
+          type: string
+          required: true
+        - name: y2
+          type: string
+          required: true
+        - name: stroke
+          type: string
+        - name: stroke-width
+          type: string
+        - name: stroke-linecap
+          type: string
+        - name: stroke-dasharray
+          type: string
+        - name: opacity
+          type: string
+        - name: transform
+          type: string
+    
+    - tag: polygon
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: points
+          type: string
+          required: true
+        - name: fill
+          type: string
+        - name: stroke
+          type: string
+        - name: stroke-width
+          type: string
+        - name: stroke-linejoin
+          type: string
+        - name: opacity
+          type: string
+        - name: transform
+          type: string
+    
+    - tag: polyline
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: points
+          type: string
+          required: true
+        - name: fill
+          type: string
+        - name: stroke
+          type: string
+        - name: stroke-width
+          type: string
+        - name: stroke-linejoin
+          type: string
+        - name: stroke-linecap
+          type: string
+        - name: opacity
+          type: string
+        - name: transform
+          type: string
+    
+    - tag: ellipse
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: cx
+          type: string
+        - name: cy
+          type: string
+        - name: rx
+          type: string
+          required: true
+        - name: ry
+          type: string
+          required: true
+        - name: fill
+          type: string
+        - name: stroke
+          type: string
+        - name: stroke-width
+          type: string
+        - name: opacity
+          type: string
+        - name: transform
+          type: string
+    
+    # Container elements
+    - tag: g
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: fill
+          type: string
+        - name: stroke
+          type: string
+        - name: stroke-width
+          type: string
+        - name: opacity
+          type: string
+        - name: transform
+          type: string
+    
+    - tag: defs
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+    
+    - tag: symbol
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: id
+          type: string
+        - name: viewBox
+          type: string
+        - name: preserveAspectRatio
+          type: string
+    
+    - tag: use
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: href
+          type: string
+          required: true
+        - name: x
+          type: string
+        - name: y
+          type: string
+        - name: width
+          type: string
+        - name: height
+          type: string
+    
+    # Text elements
+    - tag: svgtext
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: x
+          type: string
+        - name: y
+          type: string
+        - name: dx
+          type: string
+        - name: dy
+          type: string
+        - name: text-anchor
+          type: string
+        - name: font-family
+          type: string
+        - name: font-size
+          type: string
+        - name: font-weight
+          type: string
+        - name: fill
+          type: string
+        - name: stroke
+          type: string
+        - name: opacity
+          type: string
+        - name: transform
+          type: string
+    
+    - tag: tspan
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: x
+          type: string
+        - name: y
+          type: string
+        - name: dx
+          type: string
+        - name: dy
+          type: string
+        - name: fill
+          type: string
+        - name: font-size
+          type: string
+    
+    # Gradient and pattern elements
+    - tag: linearGradient
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: id
+          type: string
+          required: true
+        - name: x1
+          type: string
+        - name: y1
+          type: string
+        - name: x2
+          type: string
+        - name: y2
+          type: string
+        - name: gradientUnits
+          type: string
+        - name: gradientTransform
+          type: string
+    
+    - tag: radialGradient
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: id
+          type: string
+          required: true
+        - name: cx
+          type: string
+        - name: cy
+          type: string
+        - name: r
+          type: string
+        - name: fx
+          type: string
+        - name: fy
+          type: string
+        - name: gradientUnits
+          type: string
+        - name: gradientTransform
+          type: string
+    
+    - tag: stop
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: offset
+          type: string
+          required: true
+        - name: stop-color
+          type: string
+        - name: stop-opacity
+          type: string
+    
+    - tag: pattern
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: id
+          type: string
+          required: true
+        - name: x
+          type: string
+        - name: y
+          type: string
+        - name: width
+          type: string
+        - name: height
+          type: string
+        - name: patternUnits
+          type: string
+        - name: patternTransform
+          type: string
+    
+    # Masking and clipping
+    - tag: mask
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: id
+          type: string
+          required: true
+        - name: x
+          type: string
+        - name: y
+          type: string
+        - name: width
+          type: string
+        - name: height
+          type: string
+        - name: maskUnits
+          type: string
+    
+    - tag: clipPath
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: id
+          type: string
+          required: true
+        - name: clipPathUnits
+          type: string
+    
+    # Filter elements
+    - tag: filter
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: id
+          type: string
+          required: true
+        - name: x
+          type: string
+        - name: y
+          type: string
+        - name: width
+          type: string
+        - name: height
+          type: string
+        - name: filterUnits
+          type: string
+    
+    # Animation elements
+    - tag: animate
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: attributeName
+          type: string
+          required: true
+        - name: from
+          type: string
+        - name: to
+          type: string
+        - name: dur
+          type: string
+        - name: repeatCount
+          type: string
+        - name: fill
+          type: string
+    
+    - tag: animateTransform
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: attributeName
+          type: string
+          required: true
+        - name: type
+          type: string
+          required: true
+        - name: from
+          type: string
+        - name: to
+          type: string
+        - name: dur
+          type: string
+        - name: repeatCount
+          type: string
+    
+    # Other common SVG elements
+    - tag: image
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: href
+          type: string
+          required: true
+        - name: x
+          type: string
+        - name: y
+          type: string
+        - name: width
+          type: string
+        - name: height
+          type: string
+        - name: preserveAspectRatio
+          type: string
+    
+    - tag: foreignObject
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      attributes:
+        - name: x
+          type: string
+        - name: y
+          type: string
+        - name: width
+          type: string
+        - name: height
+          type: string
+    
+    - tag: switch
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+    
+    - tag: svgtitle
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      text_only: true
+    
+    - tag: desc
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+      text_only: true
+    
+    - tag: metadata
+      void: false
+      namespace: "http://www.w3.org/2000/svg"
+
+# Generation configuration
+generation:
+  layer0:
+    package: "functional"
+    output: "pkg/vex/functional/elements_gen.go"
+    
+  layer1:
+    package: "builder"
+    output: "pkg/vex/builder/builder_gen.go"
+    
+  props:
+    output: "pkg/vex/functional/props_gen.go"
+    
+  tests:
+    output: "pkg/vex/functional/elements_test.go"
+
+# Elements to skip (deprecated or special handling)
+skip_elements:
+  - acronym    # Deprecated
+  - applet     # Deprecated
+  - basefont   # Deprecated
+  - bgsound    # Deprecated
+  - big        # Deprecated
+  - blink      # Deprecated
+  - center     # Deprecated
+  - font       # Deprecated
+  - frame      # Deprecated
+  - frameset   # Deprecated
+  - marquee    # Deprecated
+  - nobr       # Deprecated
+  - noembed    # Deprecated
+  - noframes   # Deprecated
+  - plaintext  # Deprecated
+  - rb         # Deprecated
+  - rtc        # Deprecated
+  - strike     # Deprecated
+  - tt         # Deprecated
+  - xmp        # Deprecated

@@ -1,0 +1,57 @@
+package template
+
+type Grammar Peg {
+    PEG
+}
+
+Template <- (Element / Text / Interpolation / Directive)*
+
+# HTML Elements
+Element <- OpenTag Content* CloseTag {
+    p.AddElement(text)
+}
+
+OpenTag <- '<' TagName Attributes? '>'
+CloseTag <- '</' TagName '>'
+TagName <- [a-zA-Z][a-zA-Z0-9]*
+
+# Attributes
+Attributes <- (Attribute / EventBinding)*
+Attribute <- _ AttributeName '=' AttributeValue
+EventBinding <- _ '@' EventName '=' Expression
+
+AttributeName <- [a-zA-Z][a-zA-Z0-9-]*
+AttributeValue <- '"' [^"]* '"' / "'" [^']* "'"
+EventName <- [a-zA-Z]+
+
+# Content
+Content <- Element / Text / Interpolation / Directive
+
+# Text nodes
+Text <- (!('<' / '{{') .)+ {
+    p.AddText(text)
+}
+
+# Interpolation
+Interpolation <- '{{' _ Expression _ '}}' {
+    p.AddInterpolation(text)
+}
+
+# Directives
+Directive <- IfDirective / ForDirective
+
+IfDirective <- '{{#if' _ Expression _ '}}' Template ElseIfClause* ElseClause? '{{/if}}'
+ElseIfClause <- '{{#elseif' _ Expression _ '}}' Template
+ElseClause <- '{{#else}}' Template
+
+ForDirective <- '{{#for' _ Identifier _ 'in' _ Expression _ '}}' Template '{{/for}}'
+
+# Expressions (simplified Go expressions)
+Expression <- GoExpression
+GoExpression <- [^}]+
+
+# Identifiers
+Identifier <- [a-zA-Z_][a-zA-Z0-9_]*
+
+# Whitespace
+_ <- [ \t\n\r]*

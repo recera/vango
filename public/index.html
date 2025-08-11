@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vango App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Initialize dark mode from localStorage or system preference
+        (function() {
+            const darkMode = localStorage.getItem('darkMode');
+            if (darkMode === 'true' || 
+                (darkMode === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div id="app">
+        <div class="min-h-screen flex items-center justify-center bg-gray-100">
+            <div class="text-center">
+                <div class="text-4xl mb-4">⚡</div>
+                <p class="text-gray-600">Loading Vango...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load Vango bootstrap which will load WASM -->
+    <script src="/vango/bootstrap.js"></script>
+</body>
+</html>

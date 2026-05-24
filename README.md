@@ -1,4 +1,6 @@
-# Vango - The Go Frontend Framework - ALPHA RELEASE: EXPERIMENTAL
+**LEGACY REPO** New Repo: [![VANGO](https://github.com/vango-go/vango)](VANGO)
+
+# Vango - EXPERIMENTAL
 
 <div align="center">
 

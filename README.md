@@ -1,4 +1,4 @@
-# LEGACY REPO - New Repo: [![VANGO](https://github.com/vango-go/vango)](VANGO)
+# LEGACY REPO - New Repo: [VANGO](https://github.com/vango-go/vango)
 
 ## Vango - EXPERIMENTAL
 
